@@ -1,60 +1,62 @@
 ﻿@page "/"
-
+@using System.Threading
 <h1>Index.razor</h1>
 
 <h1>Counter</h1>
 
-<p>Current count: @count</p>
-<p>@loading</p>
-<p>Current count: @count</p>
+<p>Pomodoro time: @pomodoroTime</p>
 
-
-<button class="btn btn-primary" @onclick="CountPomodoro">Start Pomodoro</button>
+<button class="btn btn-primary" @onclick="@(async () => await StartPomodoro())">Start Pomodoro</button>
 <button class="btn btn-primary" @onclick="ResetTimer">Reset Timer</button>
 <button class="btn btn-primary" @onclick="PausePomodoro">Pause Pomodoro</button>
-<button class="btn btn-primary" @onclick="ResumePomodoro">Resume Pomodoro</button>
+<button class="btn btn-primary" @onclick="StartPomodoro">Resume Pomodoro</button>
 
 @*<button class="btn btn-primary" @onclick="SetTimer(3)">Set timer 3</button>*@
 
 @code {
-    private string loading = "";
-    private int currentCount = 0;
-    int count = 30;
-    private int pomodoroTimer = 0;
-    private bool pomodoroPause = false;
-    public void SetTimer(int number)
-    {
-        count = number;
-    }
+    private bool pomodoroPause = true;
+    TimeSpan pomodoroTime = TimeSpan.FromMinutes(25);
+    private bool countPomodoroRuning = false;
 
-    public void PausePomodoro() {
+    private CancellationTokenSource cts;
+
+    public void ResetTimer()
+    {
+        PausePomodoro();
+        pomodoroTime = TimeSpan.FromMinutes(25);
+    }
+    public void PausePomodoro()
+    {
         pomodoroPause = true;
+        cts.Cancel();
+        cts.Dispose();
+        Console.WriteLine("Paused");
     }
 
-    public void ResumePomodoro()
+    public async Task StartPomodoro()
     {
-        pomodoroPause = false;
-        CountPomodoro();
-    }
-
-    private void ResetTimer()
-    {
-        count = 30;
-    }
-
-    async public void CountPomodoro()
-    {
-        while (count > 0)
+        if (pomodoroPause)
         {
-            if (pomodoroPause) { break; }
-            await Task.Delay(1000);
-            count = count - 1;
-            this.StateHasChanged();
+            cts = new CancellationTokenSource();
+            pomodoroPause = false;
+            Console.WriteLine("Started");
+            await CountPomodoro(cts.Token);
+            Console.WriteLine("Ended");
         }
     }
 
+    private async Task CountPomodoro(CancellationToken cToken)
+    {
+        while (pomodoroTime > TimeSpan.FromSeconds(0))
+        {
+            await Task.Delay(1000, cToken);
+            cToken.ThrowIfCancellationRequested();
+
+            pomodoroTime = pomodoroTime - TimeSpan.FromSeconds(1);
+            this.StateHasChanged();
+            Console.WriteLine(pomodoroTime);
+        }
+    }
 
 }
-@*Welcome to your new app.
 
-    <SurveyPrompt Title="How is Blazor working for you?" />*@
