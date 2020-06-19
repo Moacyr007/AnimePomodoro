@@ -2,14 +2,18 @@
 @using System.Threading
 <h1>Index.razor</h1>
 
-<h1>Counter</h1>
+<button class="btn btn-primary" @onclick="@(() => SetTimer(25))">Pomodoro</button>
+<button class="btn btn-primary" @onclick="@(() => SetTimer(5))">Short Break</button>
+<button class="btn btn-primary" @onclick="@(() => SetTimer(10))">Long Break</button>
 
-<p>Pomodoro time: @pomodoroTime</p>
+<p>@pomodoroTime</p>
+<p>Pomodoro count: @pomodoroCount</p>
 
 <button class="btn btn-primary" @onclick="@(async () => await StartPomodoro())">Start Pomodoro</button>
-<button class="btn btn-primary" @onclick="ResetTimer">Reset Timer</button>
 <button class="btn btn-primary" @onclick="PausePomodoro">Pause Pomodoro</button>
-<button class="btn btn-primary" @onclick="StartPomodoro">Resume Pomodoro</button>
+
+<p>@message</p>
+
 
 @*<button class="btn btn-primary" @onclick="SetTimer(3)">Set timer 3</button>*@
 
@@ -17,20 +21,41 @@
     private bool pomodoroPause = true;
     TimeSpan pomodoroTime = TimeSpan.FromMinutes(25);
     private bool countPomodoroRuning = false;
+    private int pomodoroCount = 0;
+    private string counterType = "";
+    private string message = "";
 
     private CancellationTokenSource cts;
 
-    public void ResetTimer()
+    public void SetTimer(int value)
     {
+        if (value == 5)
+        {
+            counterType = "Short Break";
+        }else if(value == 10){
+            counterType = "Long Break";
+        }
+        else
+        {
+            counterType = "Pomodoro";
+        }
+
+        message = "";
+        this.StateHasChanged();
+
         PausePomodoro();
-        pomodoroTime = TimeSpan.FromMinutes(25);
+        pomodoroTime = TimeSpan.FromMinutes(value);
     }
     public void PausePomodoro()
     {
-        pomodoroPause = true;
-        cts.Cancel();
-        cts.Dispose();
-        Console.WriteLine("Paused");
+        if (!pomodoroPause)
+        {
+            pomodoroPause = true;
+            cts.Cancel();
+            cts.Dispose();
+            Console.WriteLine("Paused");
+        }
+        Console.WriteLine("Already Paused");
     }
 
     public async Task StartPomodoro()
@@ -47,14 +72,20 @@
 
     private async Task CountPomodoro(CancellationToken cToken)
     {
-        while (pomodoroTime > TimeSpan.FromSeconds(0))
+        if (pomodoroTime > TimeSpan.FromSeconds(0))
         {
-            await Task.Delay(1000, cToken);
-            cToken.ThrowIfCancellationRequested();
-
-            pomodoroTime = pomodoroTime - TimeSpan.FromSeconds(1);
+            while (pomodoroTime > TimeSpan.FromSeconds(0))
+            {
+                await Task.Delay(1000, cToken);
+                cToken.ThrowIfCancellationRequested();
+                pomodoroTime = pomodoroTime - TimeSpan.FromSeconds(1);
+                this.StateHasChanged();
+                Console.WriteLine(pomodoroTime);
+            }
+            if (counterType == "Pomodoro") { pomodoroCount++; };
+            message = ("Your " + counterType + " was end");
             this.StateHasChanged();
-            Console.WriteLine(pomodoroTime);
+            counterType = "";
         }
     }
 
