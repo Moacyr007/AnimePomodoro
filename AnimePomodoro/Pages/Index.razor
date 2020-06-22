@@ -6,7 +6,9 @@
 <button class="btn btn-primary" @onclick="@(() => SetTimer(5))">Short Break</button>
 <button class="btn btn-primary" @onclick="@(() => SetTimer(10))">Long Break</button>
 
-<p>@pomodoroTime</p>
+
+<h1>@outputPomodoroTime</h1>
+
 <p>Pomodoro count: @pomodoroCount</p>
 
 <button class="btn btn-primary" @onclick="@(async () => await StartPomodoro())">Start Pomodoro</button>
@@ -20,10 +22,10 @@
 @code {
     private bool pomodoroPause = true;
     TimeSpan pomodoroTime = TimeSpan.FromMinutes(25);
-    private bool countPomodoroRuning = false;
     private int pomodoroCount = 0;
     private string counterType = "";
     private string message = "";
+    private string outputPomodoroTime = "25:00";
 
     private CancellationTokenSource cts;
 
@@ -41,10 +43,10 @@
         }
 
         message = "";
-        this.StateHasChanged();
-
         PausePomodoro();
         pomodoroTime = TimeSpan.FromMinutes(value);
+        outputPomodoroTime = $"{(int)pomodoroTime.TotalMinutes}:{pomodoroTime.Seconds:00}";
+        this.StateHasChanged();
     }
     public void PausePomodoro()
     {
@@ -79,6 +81,7 @@
                 await Task.Delay(1000, cToken);
                 cToken.ThrowIfCancellationRequested();
                 pomodoroTime = pomodoroTime - TimeSpan.FromSeconds(1);
+                outputPomodoroTime = $"{(int)pomodoroTime.TotalMinutes}:{pomodoroTime.Seconds:00}";
                 this.StateHasChanged();
                 Console.WriteLine(pomodoroTime);
             }
