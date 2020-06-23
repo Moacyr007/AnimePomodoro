@@ -1,25 +1,42 @@
 ﻿@page "/"
 @using System.Threading
-<h1>Index.razor</h1>
 
-<button class="btn btn-primary" @onclick="@(() => SetTimer(25))">Pomodoro</button>
-<button class="btn btn-primary" @onclick="@(() => SetTimer(5))">Short Break</button>
-<button class="btn btn-primary" @onclick="@(() => SetTimer(10))">Long Break</button>
-
-
-<h1>@outputPomodoroTime</h1>
-
-<p>Pomodoro count: @pomodoroCount</p>
-
-<button class="btn btn-primary" @onclick="@(async () => await StartPomodoro())">Start Pomodoro</button>
-<button class="btn btn-primary" @onclick="PausePomodoro">Pause Pomodoro</button>
-
-<p>@message</p>
+        <div class="content">
+            <button class="btn btn-primary" @onclick="@(() => SetTimer(25))">Pomodoro</button>
+            <button class="btn btn-primary" @onclick="@(() => SetTimer(5))">Short Break</button>
+            <button class="btn btn-primary" @onclick="@(() => SetTimer(10))">Long Break</button>
 
 
-@*<button class="btn btn-primary" @onclick="SetTimer(3)">Set timer 3</button>*@
+            <h1 class="pomodoroTime">@outputPomodoroTime</h1>
+
+            <p>Pomodoro count: @pomodoroCount</p>
+
+            <button class="btn btn-primary" @onclick="@(async () => await StartPomodoro())">Start Pomodoro</button>
+            <button class="btn btn-primary" @onclick="PausePomodoro">Pause Pomodoro</button>
+
+            <p>@message</p>
+
+            <img class="animeGirlImage" src="/assets/images/teenage-girl-anime-character.jpg" alt="teenage-girl-anime-character" />
+        </div>
+
+        <div class="footer">
+            <p>Developed by <a href="https://www.linkedin.com/in/moacyr-pinheiro-278686110/">Moacyr Pinheiro</a></p>
+            <p>Anime girl from <a href="https://www.publicdomainpictures.net/en/view-image.php?image=58272&picture=teenage-girl-anime-character">Karen Arnold</a></p>
+
+            @if (playAlarm)
+            {
+                <embed src="/assets/audio/Alarm.mp3" autostart="false" type="audio/mpeg" loop="false" width="0" height="0" id="beep" enablejavascript="true" />
+            }
+        </div>
+
+
 
 @code {
+
+
+    bool playAlarm = false;
+
+
     private bool pomodoroPause = true;
     TimeSpan pomodoroTime = TimeSpan.FromMinutes(25);
     private int pomodoroCount = 0;
@@ -34,7 +51,9 @@
         if (value == 5)
         {
             counterType = "Short Break";
-        }else if(value == 10){
+        }
+        else if (value == 10)
+        {
             counterType = "Long Break";
         }
         else
@@ -46,6 +65,7 @@
         PausePomodoro();
         pomodoroTime = TimeSpan.FromMinutes(value);
         outputPomodoroTime = $"{(int)pomodoroTime.TotalMinutes}:{pomodoroTime.Seconds:00}";
+        playAlarm = false;
         this.StateHasChanged();
     }
     public void PausePomodoro()
@@ -86,6 +106,7 @@
                 Console.WriteLine(pomodoroTime);
             }
             if (counterType == "Pomodoro") { pomodoroCount++; };
+            playAlarm = true;
             message = ("Your " + counterType + " was end");
             this.StateHasChanged();
             counterType = "";
@@ -93,4 +114,3 @@
     }
 
 }
-
