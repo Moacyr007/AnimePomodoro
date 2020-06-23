@@ -1,3 +1,3 @@
 # AnimePomodoro
 
-![Test Image 2](“image.jpg”)
+![Test Image 2](“/image.jpg”)
