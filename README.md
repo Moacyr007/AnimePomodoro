@@ -1,3 +1,3 @@
 # AnimePomodoro
 
-![Test Image 2](“/AnimePomodoro/image.jpg”)
+![anime](https://github.com/Moacyr007/AnimePomodoro/blob/master/AnimePomodoro/image.jpg)
