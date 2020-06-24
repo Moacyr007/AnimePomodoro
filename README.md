@@ -6,13 +6,13 @@ Em desenvolvimento
 Precisa ter o .NET Core instalado
 
 -clone o repositório
-  git clone https://github.com/Moacyr007/AnimePomodoro
+  --git clone https://github.com/Moacyr007/AnimePomodoro
 
 -navegue ane a pasta do projeto
-  cd AnimePomodoro
+  --cd AnimePomodoro
 
 -execute o projeto
-  dotnet run
+  --dotnet run
 
 -acesse a url que aparecer, exemplo: https://localhost:5001/
 
