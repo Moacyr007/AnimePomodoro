@@ -2,6 +2,7 @@
 Em desenvolvimento
 
 *tutorial para rodar o projeto e estudar com a teenage-girl-anime-character.jpg*
+
 Precisa ter o .NET Core instalado
 
 -clone o repositório
