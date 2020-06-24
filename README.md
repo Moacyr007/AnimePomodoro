@@ -20,6 +20,6 @@ Precisa ter o .NET Core instalado
 
 vou tentar arrumar aqui pra funcionar no github pages 
 
--ou abra a solução no Visual Studio e aperte Ctrl + f5
+-ou abra no Visual Studio e aperte Ctrl + f5
 
 ![anime](https://github.com/Moacyr007/AnimePomodoro/blob/master/AnimePomodoro/image.jpg)
