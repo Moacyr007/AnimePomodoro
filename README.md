@@ -1,6 +1,6 @@
 # AnimePomodoro 
-Em desenvolvimento
-é melhor não usar para fins de estudo por enquanto pq ta com bug de contar o tempo errado quando está minimizado 
+Em desenvolvimento|
+  é melhor não usar para fins de estudo por enquanto pq ta com bug de contar o tempo errado quando está minimizado 
 
 # tutorial para rodar o projeto e estudar com a teenage-girl-anime-character.jpg
 
