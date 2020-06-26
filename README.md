@@ -2,6 +2,8 @@
 Em desenvolvimento|
   é melhor não usar para fins de estudo por enquanto pq ta com bug de contar o tempo errado quando está minimizado 
 
+Acesse em: https://moacyr007.github.io/AnimePomodoro/
+
 # tutorial para rodar o projeto e estudar com a teenage-girl-anime-character.jpg
 
 Precisa ter o .NET Core instalado
