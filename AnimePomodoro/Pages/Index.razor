@@ -1,33 +1,34 @@
 ﻿@page "/"
 @using System.Threading
+@inject IJSRuntime JSRuntime;
 
-        <div class="content">
-            <button class="btn btn-primary" @onclick="@(() => SetTimer(25))">Pomodoro</button>
-            <button class="btn btn-primary" @onclick="@(() => SetTimer(5))">Short Break</button>
-            <button class="btn btn-primary" @onclick="@(() => SetTimer(10))">Long Break</button>
+<div class="content">
+    <button class="btn btn-primary" @onclick="@(() => SetTimer(25))">Pomodoro</button>
+    <button class="btn btn-primary" @onclick="@(() => SetTimer(5))">Short Break</button>
+    <button class="btn btn-primary" @onclick="@(() => SetTimer(10))">Long Break</button>
 
 
-            <h1 class="pomodoroTime">@outputPomodoroTime</h1>
+    <h1 class="pomodoroTime">@outputPomodoroTime</h1>
 
-            <p>Pomodoro count: @pomodoroCount</p>
+    <p>Pomodoro count: @pomodoroCount</p>
 
-            <button class="btn btn-primary" @onclick="@(async () => await StartPomodoro())">Start</button>
-            <button class="btn btn-primary" @onclick="PausePomodoro">Pause</button>
+    <button class="btn btn-primary" @onclick="@(async () => await StartPomodoro())">Start</button>
+    <button class="btn btn-primary" @onclick="PausePomodoro">Pause</button>
 
-            <p>@message</p>
+    <p>@message</p>
 
-            <img class="animeGirlImage" src="assets/images/teenage-girl-anime-character.jpg" alt="teenage-girl-anime-character" />
-        </div>
+    <img class="animeGirlImage" src="assets/images/teenage-girl-anime-character.jpg" alt="teenage-girl-anime-character" />
+</div>
 
-        <div class="footer">
-            <p>Developed by <a href="https://www.linkedin.com/in/moacyr-pinheiro-278686110/">Moacyr Pinheiro</a></p>
-            <p>Anime girl from <a href="https://www.publicdomainpictures.net/en/view-image.php?image=58272&picture=teenage-girl-anime-character">Karen Arnold</a></p>
+<div class="footer">
+    <p>Developed by <a href="https://www.linkedin.com/in/moacyr-pinheiro-278686110/">Moacyr Pinheiro</a></p>
+    <p>Anime girl from <a href="https://www.publicdomainpictures.net/en/view-image.php?image=58272&picture=teenage-girl-anime-character">Karen Arnold</a></p>
 
-            @if (playAlarm)
-            {
-                <embed src="/assets/audio/Alarm.mp3" autostart="false" type="audio/mpeg" loop="false" width="0" height="0" id="beep" enablejavascript="true" />
-            }
-        </div>
+    @if (playAlarm)
+    {
+        <embed src="/assets/audio/Alarm.mp3" autostart="false" type="audio/mpeg" loop="false" width="0" height="0" id="beep" enablejavascript="true" />
+    }
+</div>
 
 
 
@@ -45,6 +46,11 @@
     private string outputPomodoroTime = "25:00";
 
     private CancellationTokenSource cts;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeVoidAsync("setTitle", outputPomodoroTime);
+    }
 
     public void SetTimer(int value)
     {
@@ -102,8 +108,11 @@
                 cToken.ThrowIfCancellationRequested();
                 pomodoroTime = pomodoroTime - TimeSpan.FromSeconds(1);
                 outputPomodoroTime = $"{(int)pomodoroTime.TotalMinutes}:{pomodoroTime.Seconds:00}";
+
+
                 this.StateHasChanged();
-                Console.WriteLine(pomodoroTime);
+                Console.WriteLine("Pomodoro:" + pomodoroTime);
+                Console.WriteLine(DateTime.Now.ToString("h:mm:ss tt"));
             }
             if (counterType == "Pomodoro") { pomodoroCount++; };
             playAlarm = true;
