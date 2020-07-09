@@ -9,7 +9,7 @@ Acesse em: https://moacyr007.github.io/AnimePomodoro/
 Precisa ter o .NET Core instalado
 
 -clone o repositório
-  ``git clone https://github.com/Moacyr007/AnimePomodoro``
+  ``git clone -b local https://github.com/Moacyr007/AnimePomodoro``
 
 -navegue até a pasta do projeto
   ``cd AnimePomodoro``
