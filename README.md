@@ -24,8 +24,6 @@ Precisa ter o .NET Core instalado
 
 -tutorial linux: https://www.jeremymorgan.com/blog/linux/blazor-in-linux/
 
-vou tentar arrumar aqui pra funcionar no github pages 
-
 -ou abra no Visual Studio e aperte Ctrl + f5
 
 ![anime](https://github.com/Moacyr007/AnimePomodoro/blob/master/AnimePomodoro/image.jpg)
