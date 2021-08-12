@@ -1,6 +1,6 @@
 ﻿@page "/"
 @using System.Threading
-@inject IJSRuntime JSRuntime;
+@inject IJSRuntime _jsRuntime;
 
 <div class="content">
     <button class="btn btn-primary" @onclick="@(() => SetTimer(25))">Pomodoro</button>
@@ -8,14 +8,14 @@
     <button class="btn btn-primary" @onclick="@(() => SetTimer(10))">Long Break</button>
 
 
-    <h1 class="pomodoroTime">@outputPomodoroTime</h1>
+    <h1 class="pomodoroTime">@_outputPomodoroTime</h1>
 
-    <p>Pomodoro count: @pomodoroCount</p>
+    <p>Pomodoro count: @_pomodoroCount</p>
 
     <button class="btn btn-primary" @onclick="@(async () => await StartPomodoro())">Start</button>
     <button class="btn btn-primary" @onclick="PausePomodoro">Pause</button>
 
-    <p>@message</p>
+    <p>@_message</p>
 
     <img class="animeGirlImage" src="assets/images/teenage-girl-anime-character.jpg" alt="teenage-girl-anime-character" />
 </div>
@@ -24,7 +24,7 @@
     <p>Developed by <a href="https://www.linkedin.com/in/moacyr-pinheiro-278686110/">Moacyr Pinheiro</a></p>
     <p>Anime girl from <a href="https://www.publicdomainpictures.net/en/view-image.php?image=58272&picture=teenage-girl-anime-character">Karen Arnold</a></p>
 
-    @if (playAlarm)
+    @if (_playAlarm)
     {
         <embed src="/assets/audio/Alarm.mp3" autostart="false" type="audio/mpeg" loop="false" width="0" height="0" id="beep" enablejavascript="true" />
     }
@@ -34,53 +34,55 @@
 
 @code {
 
+    bool _playAlarm = false;
+    
+    private bool _pomodoroPause = true;
+    TimeSpan _pomodoroTime = TimeSpan.FromMinutes(25);
+    private int _pomodoroCount = 0;
+    private string _counterType = "";
+    private string _message = "";
+    private string _outputPomodoroTime = "25:00";
+    private DateTime _startTime = DateTime.Now;
+    private DateTime _pousedTime;
 
-    bool playAlarm = false;
-
-
-    private bool pomodoroPause = true;
-    TimeSpan pomodoroTime = TimeSpan.FromMinutes(25);
-    private int pomodoroCount = 0;
-    private string counterType = "";
-    private string message = "";
-    private string outputPomodoroTime = "25:00";
-
-    private CancellationTokenSource cts;
+    private CancellationTokenSource _cts;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await JSRuntime.InvokeVoidAsync("setTitle", outputPomodoroTime);
+        await _jsRuntime.InvokeVoidAsync("setTitle", _outputPomodoroTime);
     }
 
     public void SetTimer(int value)
     {
         if (value == 5)
         {
-            counterType = "Short Break";
+            _counterType = "Short Break";
         }
         else if (value == 10)
         {
-            counterType = "Long Break";
+            _counterType = "Long Break";
         }
         else
         {
-            counterType = "Pomodoro";
+            _counterType = "Pomodoro";
         }
 
-        message = "";
+        _message = "";
         PausePomodoro();
-        pomodoroTime = TimeSpan.FromMinutes(value);
-        outputPomodoroTime = $"{(int)pomodoroTime.TotalMinutes}:{pomodoroTime.Seconds:00}";
-        playAlarm = false;
-        this.StateHasChanged();
+        _startTime = DateTime.Now;
+        _pomodoroTime = TimeSpan.FromMinutes(value);
+        //_outputPomodoroTime = $"{(int)_pomodoroTime.TotalMinutes}:{_pomodoroTime.Seconds:00}";
+        _outputPomodoroTime = (_startTime - DateTime.Now).ToString();
+        _playAlarm = false;
+        StateHasChanged();
     }
     public void PausePomodoro()
     {
-        if (!pomodoroPause)
+        if (!_pomodoroPause)
         {
-            pomodoroPause = true;
-            cts.Cancel();
-            cts.Dispose();
+            _pomodoroPause = true;
+            _cts.Cancel();
+            _cts.Dispose();
             Console.WriteLine("Paused");
         }
         Console.WriteLine("Already Paused");
@@ -88,37 +90,36 @@
 
     public async Task StartPomodoro()
     {
-        if (pomodoroPause)
+        if (_pomodoroPause)
         {
-            cts = new CancellationTokenSource();
-            pomodoroPause = false;
+            _cts = new CancellationTokenSource();
+            _pomodoroPause = false;
             Console.WriteLine("Started");
-            await CountPomodoro(cts.Token);
+            await CountPomodoro(_cts.Token);
             Console.WriteLine("Ended");
         }
     }
 
     private async Task CountPomodoro(CancellationToken cToken)
     {
-        if (pomodoroTime > TimeSpan.FromSeconds(0))
+        if (_pomodoroTime > TimeSpan.FromSeconds(0))
         {
-            while (pomodoroTime > TimeSpan.FromSeconds(0))
+            while (_pomodoroTime > TimeSpan.FromSeconds(0))
             {
-                await Task.Delay(1000, cToken);
+                await Task.Delay(100, cToken);
                 cToken.ThrowIfCancellationRequested();
-                pomodoroTime = pomodoroTime - TimeSpan.FromSeconds(1);
-                outputPomodoroTime = $"{(int)pomodoroTime.TotalMinutes}:{pomodoroTime.Seconds:00}";
+                _pomodoroTime = _pomodoroTime - TimeSpan.FromSeconds(1);
+                _outputPomodoroTime = (_startTime - DateTime.Now).ToString(); // $"{(int)_pomodoroTime.TotalMinutes}:{_pomodoroTime.Seconds:00}";
 
-
-                this.StateHasChanged();
-                Console.WriteLine("Pomodoro:" + pomodoroTime);
+                StateHasChanged();
+                Console.WriteLine("Pomodoro:" + _pomodoroTime);
                 Console.WriteLine(DateTime.Now.ToString("h:mm:ss tt"));
             }
-            if (counterType == "Pomodoro") { pomodoroCount++; };
-            playAlarm = true;
-            message = ("Your " + counterType + " was end");
-            this.StateHasChanged();
-            counterType = "";
+            if (_counterType == "Pomodoro") { _pomodoroCount++; };
+            _playAlarm = true;
+            _message = ("Your " + _counterType + " was end");
+            StateHasChanged();
+            _counterType = "";
         }
     }
 
