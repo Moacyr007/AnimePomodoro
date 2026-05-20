@@ -101,28 +101,41 @@
 
     private async Task CountPomodoro(CancellationToken cToken)
     {
-        var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+        if (pomodoroTime <= TimeSpan.Zero) return;
 
-        if (pomodoroTime > TimeSpan.FromSeconds(0))
+        var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+        var startTime = DateTime.UtcNow;
+        var initialTime = pomodoroTime;
+
+        try
         {
-            while (pomodoroTime > TimeSpan.FromSeconds(0))
+            while (await timer.WaitForNextTickAsync(cToken))
             {
-                while (await timer.WaitForNextTickAsync(cToken) && !cToken.IsCancellationRequested)
+                var elapsed = DateTime.UtcNow - startTime;
+                pomodoroTime = initialTime - elapsed;
+
+                if (pomodoroTime <= TimeSpan.Zero)
                 {
-                    pomodoroTime -= TimeSpan.FromSeconds(1);
-                    outputPomodoroTime = $"{(int)pomodoroTime.TotalMinutes}:{pomodoroTime.Seconds:00}";
-            
+                    pomodoroTime = TimeSpan.Zero;
+                    outputPomodoroTime = "0:00";
                     StateHasChanged();
-                    Console.WriteLine("Pomodoro:" + pomodoroTime);
-                    Console.WriteLine(DateTime.Now.ToString("h:mm:ss tt"));
+                    break;
                 }
-                 
-                cToken.ThrowIfCancellationRequested();
+
+                outputPomodoroTime = $"{(int)pomodoroTime.TotalMinutes}:{pomodoroTime.Seconds:00}";
+                StateHasChanged();
             }
-            
-            if (counterType == "Pomodoro") { pomodoroCount++; };
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        if (!cToken.IsCancellationRequested)
+        {
+            if (counterType == "Pomodoro") { pomodoroCount++; }
             playAlarm = true;
-            message = ("Your " + counterType + " was end");
+            message = "Your " + counterType + " has ended";
             StateHasChanged();
             counterType = "";
         }
