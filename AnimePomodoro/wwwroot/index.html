@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="pt-BR">
 
 <head>
     <meta charset="utf-8" />
@@ -7,32 +7,27 @@
     <title>AnimePomodoro</title>
     <!-- TODO: GitHub Actions publish step must replace this with <base href="/AnimePomodoro/" /> -->
     <base href="/" />
-    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link href="css/app.css" rel="stylesheet" />
 </head>
 
 <body>
     <div id="app">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" width="50" height="50" style="margin:auto;display:block">
-            <circle cx="50" cy="50" fill="none" stroke="#e15b64" stroke-width="10" r="35" stroke-dasharray="164.93361431346415 56.97787143782138">
-                <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
-            </circle>
-        </svg>
+        <div style="height:100vh;display:flex;align-items:center;justify-content:center;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="48" height="48">
+                <circle cx="50" cy="50" fill="none" stroke="#e8a0bf" stroke-width="8" r="38"
+                    stroke-dasharray="150 60">
+                    <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite"
+                        dur="1s" values="0 50 50;360 50 50" keyTimes="0;1" />
+                </circle>
+            </svg>
+        </div>
     </div>
 
-    <!-- Start Single Page Apps for GitHub Pages -->
+    <!-- Single Page Apps for GitHub Pages -->
     <script type="text/javascript">
-        // Single Page Apps for GitHub Pages
-        // https://github.com/rafrex/spa-github-pages
-        // Copyright (c) 2016 Rafael Pedicini, licensed under the MIT License
-        // ----------------------------------------------------------------------
-        // This script checks to see if a redirect is present in the query string
-        // and converts it back into the correct url and adds it to the
-        // browser's history using window.history.replaceState(...),
-        // which won't cause the browser to attempt to load the new url.
-        // When the single page app is loaded further down in this file,
-        // the correct url will be waiting in the browser's history for
-        // the single page app to route accordingly.
         (function (l) {
             if (l.search) {
                 var q = {};
@@ -48,14 +43,13 @@
                     );
                 }
             }
-        }(window.location))
+        }(window.location));
     </script>
-    <!-- End Single Page Apps for GitHub Pages -->
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
+        <a class="dismiss">&#x2715;</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="js/site.js"></script>
