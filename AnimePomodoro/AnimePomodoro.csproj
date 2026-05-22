@@ -3,6 +3,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <PublishDir>publish</PublishDir>
+    <StaticWebAssetBasePath>/AnimePomodoro/</StaticWebAssetBasePath>
   </PropertyGroup>
   <ItemGroup>
     <None Include="wwwroot\404.html" />
