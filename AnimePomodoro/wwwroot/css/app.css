@@ -314,23 +314,111 @@ html, body {
 /* ── Anime image ─────────────────────────────────── */
 
 .anime-image {
-    width: 130px;
-    border-radius: 18px;
+    width: 180px;
+    height: 190px;
+    border-radius: 50% 50% 42% 42% / 48% 48% 36% 36%;
     object-fit: cover;
+    object-position: top center;
     display: block;
-    filter: saturate(0.8) brightness(0.85);
+    filter: saturate(0.85) brightness(0.9);
     box-shadow:
-        0 0 28px rgba(232, 160, 191, 0.2),
-        0 8px 24px rgba(0, 0, 0, 0.45);
+        0 0 0 3px rgba(232, 160, 191, 0.18),
+        0 0 36px rgba(232, 160, 191, 0.22),
+        0 10px 28px rgba(0, 0, 0, 0.5);
     transition: all 0.4s ease;
+    margin-top: -0.25rem;
 }
 
 .anime-image:hover {
     filter: saturate(1.05) brightness(1);
     box-shadow:
-        0 0 40px rgba(232, 160, 191, 0.38),
-        0 8px 32px rgba(0, 0, 0, 0.4);
+        0 0 0 3px rgba(232, 160, 191, 0.35),
+        0 0 48px rgba(232, 160, 191, 0.32),
+        0 10px 32px rgba(0, 0, 0, 0.45);
     transform: translateY(-3px);
+}
+
+/* ── Lofi player ─────────────────────────────────── */
+
+.player {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 0.5rem 0.85rem;
+}
+
+.player-note {
+    font-size: 0.85rem;
+    color: var(--pink);
+    flex-shrink: 0;
+}
+
+.player-track {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-player {
+    background: linear-gradient(135deg, var(--pink), var(--lavender));
+    border: none;
+    color: #13111f;
+    font-size: 0.75rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.22s ease;
+    box-shadow: 0 2px 10px var(--pink-glow);
+}
+
+.btn-player:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 16px var(--pink-glow);
+}
+
+.player-volume {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 72px;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.12);
+    outline: none;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.player-volume::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--pink);
+    cursor: pointer;
+    box-shadow: 0 0 6px var(--pink-glow);
+}
+
+.player-volume::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--pink);
+    border: none;
+    cursor: pointer;
 }
 
 /* ── Footer ──────────────────────────────────────── */

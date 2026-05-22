@@ -64,6 +64,16 @@
              src="assets/images/image-1779481709337.webp"
              alt="lofi study girl" />
 
+        <div class="player">
+            <span class="player-note">♫</span>
+            <span class="player-track">lofi hip hop radio</span>
+            <button class="btn-player" @onclick="ToggleMusic">
+                @(isPlaying ? "⏸" : "▶")
+            </button>
+            <input type="range" class="player-volume" min="0" max="100" value="@volume"
+                   @oninput="OnVolumeChange" />
+        </div>
+
     </div>
 
     <footer class="app-footer">
@@ -89,6 +99,9 @@
     private string message            = "";
     private string outputPomodoroTime = "25:00";
 
+    private bool isPlaying = false;
+    private int  volume    = 50;
+
     private CancellationTokenSource cts = new();
 
     // Circumference of r=44 circle: 2π×44 ≈ 276.46
@@ -108,6 +121,26 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await JSRuntime.InvokeVoidAsync("setTitle", outputPomodoroTime);
+        if (firstRender)
+            await JSRuntime.InvokeVoidAsync("lofi.init", volume);
+    }
+
+    private async Task ToggleMusic()
+    {
+        isPlaying = !isPlaying;
+        if (isPlaying)
+            await JSRuntime.InvokeVoidAsync("lofi.play");
+        else
+            await JSRuntime.InvokeVoidAsync("lofi.pause");
+    }
+
+    private async Task OnVolumeChange(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var vol))
+        {
+            volume = vol;
+            await JSRuntime.InvokeVoidAsync("lofi.setVolume", vol);
+        }
     }
 
     public void SetTimer(int value)
