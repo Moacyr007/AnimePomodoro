@@ -18,12 +18,16 @@ jobs:
         dotnet-version: '10.x'
     - name: Publish
       run: dotnet publish --configuration Release --output build AnimePomodoro
-    - name: Fix base href
-      run: sed -i 's|<base href="/" />|<base href="/AnimePomodoro/" />|' build/wwwroot/index.html
+    - name: Fix base href and resolve deploy folder
+      run: |
+        HTML=$(find build -name "index.html" | head -1)
+        echo "index.html found at: $HTML"
+        sed -i 's|<base href="/" />|<base href="/AnimePomodoro/" />|' "$HTML"
+        echo "DEPLOY_FOLDER=$(dirname $HTML)" >> $GITHUB_ENV
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         branch: gh-pages
-        folder: build/wwwroot
+        folder: ${{ env.DEPLOY_FOLDER }}
         clean: true
