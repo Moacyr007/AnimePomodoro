@@ -1,8 +1,6 @@
 name: gh-pages
 
 on:
-  # Trigger the workflow on push or pull request,
-  # but only for the master branch
   push:
     branches:
       - master
@@ -13,18 +11,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 3.1.301
-    - name: Publish with dotnet
+        dotnet-version: '10.x'
+    - name: Publish
       run: dotnet publish --configuration Release --output build AnimePomodoro
-    - name: Deploy to Github Pages
-      uses: JamesIves/github-pages-deploy-action@releases/v3
+    - name: Fix base href
+      run: sed -i 's|<base href="/" />|<base href="/AnimePomodoro/" />|' build/wwwroot/index.html
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BASE_BRANCH: master # The branch the action should deploy from.
-        BRANCH: gh-pages # The branch the action should deploy to.
-        FOLDER: build/wwwroot # The folder the action should deploy.
-        CLEAN: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: gh-pages
+        folder: build/wwwroot
+        clean: true
