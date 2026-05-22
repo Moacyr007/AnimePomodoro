@@ -1,20 +1,20 @@
-﻿setTitle = (title) => { document.title = title; };
+setTitle = (title) => { document.title = title; };
 
+// Lofi radio via HTML5 Audio — sem dependência de API externa
 window.lofi = {
-    player: null,
+    audio: null,
     init: function (volume) {
-        if (window.lofi.player) return;
-        window.lofi.player = new YT.Player('yt-player', {
-            videoId: 'jfKfPfyJRdk',
-            playerVars: { autoplay: 0, controls: 0, fs: 0, rel: 0, iv_load_policy: 3 },
-            events: {
-                onReady: function () {
-                    window.lofi.player.setVolume(volume);
-                }
-            }
-        });
+        if (window.lofi.audio) return;
+        window.lofi.audio = new Audio('https://streams.ilovemusic.de/iloveradio17.mp3');
+        window.lofi.audio.volume = volume / 100;
     },
-    play: function () { if (window.lofi.player) window.lofi.player.playVideo(); },
-    pause: function () { if (window.lofi.player) window.lofi.player.pauseVideo(); },
-    setVolume: function (vol) { if (window.lofi.player) window.lofi.player.setVolume(vol); }
+    play: function () {
+        if (window.lofi.audio) window.lofi.audio.play().catch(function () {});
+    },
+    pause: function () {
+        if (window.lofi.audio) window.lofi.audio.pause();
+    },
+    setVolume: function (vol) {
+        if (window.lofi.audio) window.lofi.audio.volume = vol / 100;
+    }
 };
